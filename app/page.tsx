@@ -1,10 +1,29 @@
 "use client";
 
 import { useState } from "react";
+import { supabase } from "@/lib/supabase";
 
 export default function Home() {
   const [email, setEmail] = useState("");
+const [loading, setLoading] = useState(false);
+const [message, setMessage] = useState("");
+const handleSubmit = async () => {
+  setLoading(true);
+  setMessage("");
 
+  const { error } = await supabase
+    .from("waitlist")
+    .insert({ email });
+
+  if (error) {
+    setMessage("Something went wrong. Try again.");
+  } else {
+    setMessage("You're on the list!");
+    setEmail("");
+  }
+
+  setLoading(false);
+};
   return (
     <main>
       <section className="min-h-screen flex flex-col items-center justify-center p-8">
@@ -22,12 +41,16 @@ export default function Home() {
           className="px-4 py-2 border border-zinc-300 rounded-md"
         />
         <button
-          onClick={() => alert("Submitted: " + email)}
+          onClick={handleSubmit}
+disabled={loading}
           className="px-4 py-2 bg-black text-white rounded-md font-medium"
         >
           Join waitlist
         </button>
       </div>
+      {message && (
+  <p className="mt-4 text-sm text-zinc-700">{message}</p>
+)}
       </section>
 
       <section className="py-24 px-8 max-w-5xl mx-auto">
@@ -75,10 +98,11 @@ export default function Home() {
         className="px-4 py-2 border border-zinc-300 rounded-md"
       />
       <button
-        onClick={() => alert("Submitted: " + email)}
+        onClick={handleSubmit}
+disabled={loading}
         className="px-4 py-2 bg-black text-white rounded-md font-medium"
       >
-        Join waitlist
+        {loading ? "Submitting..." : "Join waitlist"}
       </button>
     </div>
   </div>
