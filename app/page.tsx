@@ -7,7 +7,15 @@ export default function Home() {
   const [email, setEmail] = useState("");
 const [loading, setLoading] = useState(false);
 const [message, setMessage] = useState("");
+const isValidEmail = (value: string) => {
+  const trimmed = value.trim();
+  return trimmed.length > 0 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed);
+};
 const handleSubmit = async () => {
+  if (!isValidEmail(email)) {
+  setMessage("Please enter a valid email.");
+  return;
+}
   setLoading(true);
   setMessage("");
 
