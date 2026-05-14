@@ -50,10 +50,13 @@ const handleSubmit = async () => {
 
   setLoading(false);
 };
-  return (
-    <main>
+ return (
+    <>
+      <main>
       <section className="min-h-screen flex flex-col items-center justify-center p-8">
-      <h1 className="text-5xl font-bold">AI Docs</h1>
+<h1 className="text-5xl md:text-7xl font-bold bg-gradient-to-r from-zinc-900 to-zinc-600 bg-clip-text text-transparent">
+  AI Docs
+</h1>
       <p className="mt-4 text-xl text-zinc-600">
         Write in your voice. Powered by AI.
       </p>
@@ -82,7 +85,7 @@ disabled={loading}
       <section className="py-24 px-8 max-w-5xl mx-auto">
   <h2 className="text-3xl font-bold text-center">Why AI Docs</h2>
 
-  <div className="mt-12 flex gap-6">
+  <div className="mt-12 flex flex-col md:flex-row gap-6">
     <div className="flex-1 p-6 border border-zinc-200 rounded-lg">
       <div className="text-4xl">🎯</div>
       <h3 className="mt-4 text-xl font-semibold">Trained on your voice</h3>
@@ -135,5 +138,11 @@ disabled={loading}
 </section>
 
     </main>
+  
+
+      <footer className="py-8 px-8 border-t border-zinc-200 text-center text-sm text-zinc-500">
+        © 2026 AI Docs. Made by Jake.
+      </footer>
+    </>
   );
 }
