@@ -4,29 +4,47 @@ import { useState } from "react";
 import { supabase } from "@/lib/supabase";
 
 export default function Home() {
-  const [email, setEmail] = useState("");
+const [email, setEmail] = useState("");
 const [loading, setLoading] = useState(false);
 const [message, setMessage] = useState("");
+
 const isValidEmail = (value: string) => {
   const trimmed = value.trim();
   return trimmed.length > 0 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed);
 };
 const handleSubmit = async () => {
   if (!isValidEmail(email)) {
-  setMessage("Please enter a valid email.");
-  return;
-}
+    setMessage("Please enter a valid email.");
+    return;
+  }
+
   setLoading(true);
   setMessage("");
 
-  const { error } = await supabase
+  // 1. Save to Supabase
+  const { error: dbError } = await supabase
     .from("waitlist")
     .insert({ email });
 
-  if (error) {
+  if (dbError) {
     setMessage("Something went wrong. Try again.");
+    setLoading(false);
+    return;
+  }
+
+  // 2. Send confirmation email via API route
+  const response = await fetch("/api/subscribe", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email }),
+  });
+
+  const result = await response.json();
+
+  if (result.error) {
+    setMessage("Saved, but confirmation email failed.");
   } else {
-    setMessage("You're on the list!");
+    setMessage("You're on the list! Check your email.");
     setEmail("");
   }
 
